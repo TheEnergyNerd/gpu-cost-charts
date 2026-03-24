@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbital Compute Satellite — Cost Budget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --sa-base: #1D1F21; --sa-surface: #131416; --sa-surface2: #242628;
+    --sa-border: #35383C; --sa-gold: #F7B041; --sa-blue: #0B86D1;
+    --sa-text: #EAEBEC; --sa-text-muted: #999EA4; --sa-text-dim: #7E848C;
+    --sa-text-faint: #656B72; --sa-white: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--sa-base); color: var(--sa-text); line-height: 1.6; padding: 2.5rem 1rem; font-size: 16px; }
+  .container { max-width: 730px; margin: 0 auto; }
+  h1 { font-size: clamp(22px, 1.4rem + 1.2vw, 36px); font-weight: 800; color: var(--sa-white); margin-bottom: .3rem; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sa-text-muted); font-size: .88rem; margin-bottom: 2rem; }
+  h2 { font-size: clamp(17px, 1rem + 0.5vw, 22px); font-weight: 800; color: var(--sa-white); margin: 2.5rem 0 .7rem; letter-spacing: -0.01em; }
+
+  .chart-section { background: var(--sa-surface); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: .6rem; }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 100;
+    background: var(--sa-surface); border: 1px solid var(--sa-border);
+    color: var(--sa-text); border-radius: 10px;
+    padding: 14px 18px; font-size: .82rem; line-height: 1.65;
+    box-shadow: 0 12px 40px rgba(0,0,0,.5);
+    max-width: 360px; opacity: 0; transition: opacity .12s;
+  }
+  #tooltip.visible { opacity: 1; }
+  .tt-title { font-weight: 700; font-size: .88rem; margin-bottom: 6px; border-bottom: 1px solid var(--sa-border); padding-bottom: 5px; color: var(--sa-white); }
+  .tt-total { font-weight: 700; margin-top: 6px; border-top: 1px solid var(--sa-border); padding-top: 5px; color: var(--sa-gold); }
+  .tt-row { display: flex; justify-content: space-between; gap: 12px; }
+  .tt-row .tt-label { color: var(--sa-text-muted); }
+  .tt-row .tt-val { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tt-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  .tt-pct { color: var(--sa-text-dim); font-size: .72rem; margin-left: 3px; }
+
+  /* Donut */
+  .donut-wrap { display: flex; align-items: center; gap: 2rem; }
+  .donut-area { width: 320px; height: 320px; flex-shrink: 0; }
+  .donut-legend { flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: .84rem; cursor: pointer; border-radius: 6px; padding: 5px 8px; transition: background .15s; }
+  .legend-item:hover { background: var(--sa-surface2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; color: var(--sa-text-muted); }
+  .legend-val { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--sa-text); }
+  .legend-pct { color: var(--sa-text-dim); font-size: .78rem; min-width: 36px; text-align: right; }
+
+  /* Bar chart */
+  .bar-area { height: 400px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-bottom: 2rem; background: var(--sa-surface); border-radius: 10px; overflow: hidden; }
+  thead th { background: var(--sa-surface2); color: var(--sa-text-muted); padding: 10px 12px; text-align: left; font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--sa-border); }
+  thead th:not(:first-child) { text-align: right; }
+  tbody td { padding: 6px 12px; border-bottom: 1px solid var(--sa-border); color: var(--sa-text); }
+  tbody td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr:hover { background: var(--sa-surface2); }
+  tbody tr.cat td { font-weight: 600; background: rgba(247, 176, 65, 0.06); color: var(--sa-white); }
+  tbody tr.sub td:first-child { padding-left: 24px; color: var(--sa-text-muted); }
+  tbody tr.total-row { background: var(--sa-gold); }
+  tbody tr.total-row td { border: none; color: var(--sa-base); font-weight: 700; }
+  td.ed { cursor: pointer; position: relative; }
+  td.ed:hover { background: rgba(247, 176, 65, 0.1); }
+  td.ed::after { content: '✎'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: .58rem; color: var(--sa-text-faint); opacity: 0; }
+  td.ed:hover::after { opacity: 1; }
+  input.cell-edit { width: 100%; border: 2px solid var(--sa-gold); border-radius: 4px; padding: 3px 8px; font-size: .82rem; text-align: right; outline: none; background: var(--sa-surface2); color: var(--sa-white); font-family: 'Inter', sans-serif; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  /* Grand total callout */
+  .grand-total {
+    background: var(--sa-surface); border: 1px solid var(--sa-gold);
+    border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0 2rem;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .grand-total .label { color: var(--sa-text-muted); font-weight: 600; font-size: .9rem; text-transform: uppercase; letter-spacing: .5px; }
+  .grand-total .value { color: var(--sa-gold); font-weight: 800; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 640px) {
+    .donut-wrap { flex-direction: column; }
+    .donut-area { width: 100%; height: 260px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Orbital Compute Satellite — Cost Budget</h1>
+<p class="subtitle">Single satellite deployment + 5-year operations. Hover for breakdown, click values to edit.</p>
+
+<div id="grandTotal" class="grand-total">
+  <span class="label">Total Satellite Cost</span>
+  <span class="value" id="gtVal"></span>
+</div>
+
+<!-- Donut -->
+<h2>Cost Allocation</h2>
+<div class="chart-section">
+  <div class="donut-wrap">
+    <div class="donut-area"><canvas id="cDonut"></canvas></div>
+    <div class="donut-legend" id="donutLegend"></div>
+  </div>
+</div>
+
+<!-- Horizontal bar -->
+<h2>Cost by Category</h2>
+<div class="chart-section"><div class="bar-area"><canvas id="cBar"></canvas></div></div>
+
+<!-- Table -->
+<table id="tBudget">
+  <thead><tr><th>Item</th><th>Cost (USD)</th><th>% of Total</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+</div>
+<div id="tooltip"></div>
+
+<script>
+Chart.defaults.color = '#999EA4';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+const palette = [
+  '#0B86D1', // Compute HW - blue
+  '#F7B041', // Power & Thermal - gold
+  '#2EC4B6', // Comms & Ground - teal
+  '#A78BFA', // Bus & Propulsion - purple
+  '#F472B6', // Radiation Testing - pink
+  '#4ADE80', // AIT - green
+  '#E8654A', // Flight Software - coral
+  '#38BDF8', // Operations - sky
+  '#FBBF24', // Launch - yellow
+];
+
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const data = [
+  { label: 'Compute Hardware', color: palette[0], subs: [
+    { label: 'GPU Hardware (8×)',           val: 720000 },
+    { label: 'Carrier Cards',              val: 32000 },
+    { label: 'Server Infrastructure',      val: 16000 },
+    { label: 'Network Hardware',           val: 6000 },
+  ]},
+  { label: 'Power & Thermal', color: palette[1], subs: [
+    { label: 'Solar Array',                val: 33830.66 },
+    { label: 'Radiator Hardware',          val: 48000 },
+    { label: 'Cold Plates',               val: 8000 },
+  ]},
+  { label: 'Comms & Ground', color: palette[2], subs: [
+    { label: 'Comms Hardware (laser)',     val: 950000 },
+    { label: 'Ground Segment',            val: 45000 },
+  ]},
+  { label: 'Bus & Propulsion', color: palette[3], subs: [
+    { label: 'Bus Hardware (ADCS+OBC+harness)', val: 870000 },
+    { label: 'Thruster Hardware',          val: 150000 },
+    { label: 'Feed System',               val: 30000 },
+    { label: 'Propellant',                val: 45.97 },
+    { label: 'Tank',                      val: 275.80 },
+    { label: 'Shielding (Al)',            val: 1600 },
+    { label: 'Structure & Integration',   val: 33125.14 },
+  ]},
+  { label: 'Radiation Testing', color: palette[4], subs: [
+    { label: 'Characterization Campaign (NRE)', val: 150000 },
+    { label: 'UC Davis CNL Beam Time',    val: 90480 },
+  ]},
+  { label: 'Assembly, Integration & Test', color: palette[5], subs: [
+    { label: 'AIT (10% of HW)',           val: 286543.07 },
+  ]},
+  { label: 'Flight Software (NRE)', color: palette[6], subs: [
+    { label: '200k SLOC × 60% new × $15/SLOC', val: 1200000 },
+  ]},
+  { label: 'Operations (5 yr)', color: palette[7], subs: [
+    { label: 'AI-first ops ($200k/yr)',   val: 1000000 },
+    { label: 'Ground station ops ($50k/yr)', val: 250000 },
+  ]},
+  { label: 'Launch (Falcon 9)', color: palette[8], subs: [
+    { label: 'Launch @ $1,500/kg',        val: 1277519.32 },
+  ]},
+];
+
+function catTotal(cat) { return cat.subs.reduce((s, x) => s + x.val, 0); }
+function grandTotal() { return data.reduce((s, c) => s + catTotal(c), 0); }
+function fmt(v) { return '$' + Math.round(v).toLocaleString(); }
+function fmtK(v) { return v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + Math.round(v/1000) + 'k'; }
+
+function updateGT() { document.getElementById('gtVal').textContent = fmt(grandTotal()); }
+
+// ═══════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════
+const ttEl = document.getElementById('tooltip');
+function showTT(cat) {
+  const total = catTotal(cat);
+  const gt = grandTotal();
+  let html = `<div class="tt-title"><span class="tt-dot" style="background:${cat.color}"></span>${cat.label}</div>`;
+  cat.subs.forEach(s => {
+    const pct = total > 0 ? ((s.val / total) * 100).toFixed(0) : 0;
+    html += `<div class="tt-row"><span class="tt-label">${s.label}</span><span class="tt-val">${fmt(s.val)}<span class="tt-pct">${pct}%</span></span></div>`;
+  });
+  html += `<div class="tt-total tt-row"><span>Total (${((total/gt)*100).toFixed(1)}% of budget)</span><span class="tt-val">${fmt(total)}</span></div>`;
+  ttEl.innerHTML = html;
+  ttEl.classList.add('visible');
+}
+function moveTT(evt) {
+  const x = evt.clientX, y = evt.clientY;
+  let left = x + 16, top = y - ttEl.offsetHeight / 2;
+  if (left + ttEl.offsetWidth > window.innerWidth - 12) left = x - ttEl.offsetWidth - 16;
+  if (top < 8) top = 8;
+  if (top + ttEl.offsetHeight > window.innerHeight - 8) top = window.innerHeight - ttEl.offsetHeight - 8;
+  ttEl.style.left = left + 'px'; ttEl.style.top = top + 'px';
+}
+function hideTT() { ttEl.classList.remove('visible'); }
+document.addEventListener('mousemove', e => { if (ttEl.classList.contains('visible')) moveTT(e); });
+
+// ═══════════════════════════════════════
+// DONUT CHART
+// ═══════════════════════════════════════
+let donutChart;
+function buildDonut() {
+  const vals = data.map(catTotal);
+  const gt = grandTotal();
+  const chartData = {
+    labels: data.map(c => c.label),
+    datasets: [{
+      data: vals,
+      backgroundColor: data.map(c => c.color),
+      hoverBackgroundColor: data.map(c => c.color),
+      borderColor: '#131416',
+      borderWidth: 2,
+    }]
+  };
+  if (donutChart) { donutChart.data = chartData; donutChart.update(); }
+  else {
+    donutChart = new Chart(document.getElementById('cDonut'), {
+      type: 'doughnut',
+      data: chartData,
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+        onHover: (evt, elements) => {
+          if (elements.length) { showTT(data[elements[0].index]); moveTT(evt.native); }
+          else hideTT();
+        },
+      },
+    });
+    document.getElementById('cDonut').addEventListener('mouseleave', hideTT);
+  }
+  // Legend
+  const leg = document.getElementById('donutLegend');
+  leg.innerHTML = '';
+  data.forEach((c, i) => {
+    const v = catTotal(c);
+    const pct = ((v / gt) * 100).toFixed(1);
+    const el = document.createElement('div');
+    el.className = 'legend-item';
+    el.innerHTML = `<span class="legend-dot" style="background:${c.color}"></span><span class="legend-label">${c.label}</span><span class="legend-val">${fmtK(v)}</span><span class="legend-pct">${pct}%</span>`;
+    el.addEventListener('mouseenter', () => showTT(c));
+    el.addEventListener('mouseleave', hideTT);
+    leg.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════════
+// HORIZONTAL BAR
+// ═══════════════════════════════════════
+let barChart;
+function buildBar() {
+  const vals = data.map(catTotal);
+  const chartData = {
+    labels: data.map(c => c.label),
+    datasets: [{
+      data: vals,
+      backgroundColor: data.map(c => c.color),
+      hoverBackgroundColor: data.map(c => c.color),
+      borderRadius: 4,
+      barThickness: 26,
+    }]
+  };
+  if (barChart) { barChart.data = chartData; barChart.update(); }
+  else {
+    barChart = new Chart(document.getElementById('cBar'), {
+      type: 'bar',
+      data: chartData,
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+        scales: {
+          x: { grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' },
+               ticks: { callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + (v/1000) + 'k', color: '#999EA4' } },
+          y: { grid: { display: false }, ticks: { color: '#EAEBEC', font: { size: 11 } } },
+        },
+        onHover: (evt, elements) => {
+          const canvas = document.getElementById('cBar');
+          if (elements.length) { showTT(data[elements[0].index]); moveTT(evt.native); canvas.style.cursor = 'pointer'; }
+          else { hideTT(); canvas.style.cursor = 'default'; }
+        },
+      },
+    });
+    document.getElementById('cBar').addEventListener('mouseleave', hideTT);
+  }
+}
+
+// ═══════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════
+function renderTable() {
+  const tbody = document.querySelector('#tBudget tbody');
+  tbody.innerHTML = '';
+  const gt = grandTotal();
+  data.forEach((cat, ci) => {
+    const cv = catTotal(cat);
+    const cr = document.createElement('tr'); cr.className = 'cat';
+    cr.innerHTML = `<td><span class="dot" style="background:${cat.color}"></span>${cat.label}</td><td>${fmt(cv)}</td><td>${((cv/gt)*100).toFixed(1)}%</td>`;
+    tbody.appendChild(cr);
+    cat.subs.forEach((s, si) => {
+      const sr = document.createElement('tr'); sr.className = 'sub';
+      sr.innerHTML = `<td>${s.label}</td><td class="ed" data-ci="${ci}" data-si="${si}">${fmt(s.val)}</td><td style="color:var(--sa-text-dim)">${((s.val/gt)*100).toFixed(1)}%</td>`;
+      tbody.appendChild(sr);
+    });
+  });
+  const tr = document.createElement('tr'); tr.className = 'total-row';
+  tr.innerHTML = `<td>TOTAL</td><td>${fmt(gt)}</td><td>100%</td>`;
+  tbody.appendChild(tr);
+}
+
+function refreshAll() {
+  updateGT(); buildDonut(); buildBar(); renderTable();
+}
+
+refreshAll();
+
+// ═══════════════════════════════════════
+// INLINE EDITING
+// ═══════════════════════════════════════
+document.addEventListener('click', e => {
+  const td = e.target.closest('td.ed');
+  if (!td || td.querySelector('input')) return;
+  const raw = td.textContent.replace(/[$,\s]/g, '');
+  const input = document.createElement('input');
+  input.className = 'cell-edit'; input.value = raw;
+  td.textContent = ''; td.appendChild(input);
+  input.focus(); input.select();
+  function commit() {
+    const v = parseFloat(input.value);
+    if (isNaN(v)) { refreshAll(); return; }
+    data[parseInt(td.dataset.ci)].subs[parseInt(td.dataset.si)].val = v;
+    refreshAll();
+  }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') refreshAll(); });
+});
+</script>
+</body>
+</html>
