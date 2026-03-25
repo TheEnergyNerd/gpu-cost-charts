@@ -135,6 +135,32 @@
 
   .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
   .note { font-size: .76rem; color: var(--sa-text-dim); font-style: italic; margin: .4rem 0; }
+
+  /* Grand total callout */
+  .grand-total {
+    background: var(--sa-surface); border: 1px solid var(--sa-gold);
+    border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0 2rem;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .gt-label { color: var(--sa-text-muted); font-weight: 600; font-size: .9rem; text-transform: uppercase; letter-spacing: .5px; }
+  .gt-value { color: var(--sa-gold); font-weight: 800; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+
+  /* Donut layout */
+  .donut-wrap { display: flex; align-items: center; gap: 2rem; }
+  .donut-area { width: 300px; height: 300px; flex-shrink: 0; }
+  .donut-legend { flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; font-size: .84rem; cursor: pointer; border-radius: 6px; transition: background .15s; }
+  .legend-item:hover { background: var(--sa-surface2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; color: var(--sa-text-muted); }
+  .legend-val { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--sa-text); }
+  .legend-pct { color: var(--sa-text-dim); font-size: .78rem; min-width: 36px; text-align: right; }
+  .bar-area { height: 400px; }
+
+  @media (max-width: 640px) {
+    .donut-wrap { flex-direction: column; }
+    .donut-area { width: 100%; height: 260px; }
+  }
 </style>
 </head>
 <body>
@@ -162,6 +188,34 @@
 <h2>4. Cost Efficiency Metrics</h2>
 <div class="chart-section"><div class="chart-area"><canvas id="c4"></canvas></div></div>
 <table id="t4"><thead><tr><th>Metric</th><th>Terrestrial</th><th>Orbital</th></tr></thead><tbody></tbody></table>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 5. SATELLITE COST BUDGET -->
+<!-- ═══════════════════════════════════════════════ -->
+<div style="border-top: 1px solid var(--sa-border); margin: 3rem 0 1rem;"></div>
+<h1 style="margin-top:2rem;">Orbital Compute Satellite — Cost Budget</h1>
+<p class="subtitle">Single satellite deployment + 5-year operations. Hover for breakdown, click values to edit.</p>
+
+<div id="grandTotal" class="grand-total">
+  <span class="gt-label">Total Satellite Cost</span>
+  <span class="gt-value" id="gtVal"></span>
+</div>
+
+<h2>5. Cost Allocation</h2>
+<div class="chart-section">
+  <div class="donut-wrap">
+    <div class="donut-area"><canvas id="cDonut"></canvas></div>
+    <div class="donut-legend" id="donutLegend"></div>
+  </div>
+</div>
+
+<h2>6. Cost by Category</h2>
+<div class="chart-section"><div class="bar-area"><canvas id="cBar"></canvas></div></div>
+
+<table id="tBudget">
+  <thead><tr><th>Item</th><th>Cost (USD)</th><th>% of Total</th></tr></thead>
+  <tbody></tbody>
+</table>
 
 </div>
 
@@ -448,6 +502,191 @@ document.addEventListener('click', e => {
     if (e.key === 'Escape') refreshTable(td.dataset.tid);
   });
 });
+
+// ═══════════════════════════════════════════════
+// 5. SATELLITE COST BUDGET
+// ═══════════════════════════════════════════════
+const satPalette = [
+  '#0B86D1', '#F7B041', '#2EC4B6', '#A78BFA', '#F472B6',
+  '#4ADE80', '#E8654A', '#38BDF8', '#FBBF24',
+];
+
+const satData = [
+  { label: 'Compute Hardware', color: satPalette[0], subs: [
+    { label: 'GPU Hardware (8×)',      val: 720000 },
+    { label: 'Carrier Cards',         val: 32000 },
+    { label: 'Server Infrastructure', val: 16000 },
+    { label: 'Network Hardware',      val: 6000 },
+  ]},
+  { label: 'Power & Thermal', color: satPalette[1], subs: [
+    { label: 'Solar Array',       val: 33830.66 },
+    { label: 'Radiator Hardware', val: 48000 },
+    { label: 'Cold Plates',      val: 8000 },
+  ]},
+  { label: 'Comms & Ground', color: satPalette[2], subs: [
+    { label: 'Comms Hardware (laser)', val: 950000 },
+    { label: 'Ground Segment',        val: 45000 },
+  ]},
+  { label: 'Bus & Propulsion', color: satPalette[3], subs: [
+    { label: 'Bus Hardware (ADCS+OBC+harness)', val: 870000 },
+    { label: 'Thruster Hardware', val: 150000 },
+    { label: 'Feed System',      val: 30000 },
+    { label: 'Propellant',       val: 45.97 },
+    { label: 'Tank',             val: 275.80 },
+    { label: 'Shielding (Al)',   val: 1600 },
+    { label: 'Structure & Integration', val: 33125.14 },
+  ]},
+  { label: 'Radiation Testing', color: satPalette[4], subs: [
+    { label: 'Characterization Campaign (NRE)', val: 150000 },
+    { label: 'UC Davis CNL Beam Time',          val: 90480 },
+  ]},
+  { label: 'Assembly, Integration & Test', color: satPalette[5], subs: [
+    { label: 'AIT (10% of HW)', val: 286543.07 },
+  ]},
+  { label: 'Flight Software (NRE)', color: satPalette[6], subs: [
+    { label: '200k SLOC × 60% new × $15/SLOC', val: 1200000 },
+  ]},
+  { label: 'Operations (5 yr)', color: satPalette[7], subs: [
+    { label: 'AI-first ops ($200k/yr)',      val: 1000000 },
+    { label: 'Ground station ops ($50k/yr)', val: 250000 },
+  ]},
+  { label: 'Launch (Falcon 9)', color: satPalette[8], subs: [
+    { label: 'Launch @ $1,500/kg', val: 1277519.32 },
+  ]},
+];
+
+function satCatTotal(cat) { return cat.subs.reduce((s, x) => s + x.val, 0); }
+function satGrandTotal() { return satData.reduce((s, c) => s + satCatTotal(c), 0); }
+function satFmt(v) { return '$' + Math.round(v).toLocaleString(); }
+function satFmtK(v) { return v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + Math.round(v/1000) + 'k'; }
+
+function satUpdateGT() { document.getElementById('gtVal').textContent = satFmt(satGrandTotal()); }
+
+// Satellite tooltip (reuses ttEl)
+function satShowTT(cat) {
+  const total = satCatTotal(cat);
+  const gt = satGrandTotal();
+  let html = `<div class="tt-title"><span class="tt-dot" style="background:${cat.color}"></span>${cat.label}</div>`;
+  cat.subs.forEach(s => {
+    const pct = total > 0 ? ((s.val / total) * 100).toFixed(0) : 0;
+    html += `<div class="tt-row"><span class="tt-label">${s.label}</span><span class="tt-val">${satFmt(s.val)}<span class="tt-pct">${pct}%</span></span></div>`;
+  });
+  html += `<div class="tt-total tt-row"><span>Total (${((total/gt)*100).toFixed(1)}%)</span><span class="tt-val">${satFmt(total)}</span></div>`;
+  ttEl.innerHTML = html;
+  ttEl.classList.add('visible');
+}
+
+// Donut
+let donutChart;
+function buildDonut() {
+  const vals = satData.map(satCatTotal);
+  const gt = satGrandTotal();
+  const cd = {
+    labels: satData.map(c => c.label),
+    datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderColor: '#131416', borderWidth: 2 }]
+  };
+  if (donutChart) { donutChart.data = cd; donutChart.update(); }
+  else {
+    donutChart = new Chart(document.getElementById('cDonut'), {
+      type: 'doughnut', data: cd,
+      options: {
+        responsive: true, maintainAspectRatio: false, cutout: '62%',
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        onHover: (evt, els) => {
+          if (els.length) { satShowTT(satData[els[0].index]); moveTT(evt.native); } else hideTT();
+        },
+      },
+    });
+    document.getElementById('cDonut').addEventListener('mouseleave', hideTT);
+  }
+  // Legend
+  const leg = document.getElementById('donutLegend');
+  leg.innerHTML = '';
+  satData.forEach(c => {
+    const v = satCatTotal(c);
+    const el = document.createElement('div'); el.className = 'legend-item';
+    el.innerHTML = `<span class="legend-dot" style="background:${c.color}"></span><span class="legend-label">${c.label}</span><span class="legend-val">${satFmtK(v)}</span><span class="legend-pct">${((v/gt)*100).toFixed(1)}%</span>`;
+    el.addEventListener('mouseenter', () => satShowTT(c));
+    el.addEventListener('mouseleave', hideTT);
+    leg.appendChild(el);
+  });
+}
+
+// Horizontal bar
+let satBarChart;
+function buildSatBar() {
+  const vals = satData.map(satCatTotal);
+  const cd = {
+    labels: satData.map(c => c.label),
+    datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderRadius: 4, barThickness: 26 }]
+  };
+  if (satBarChart) { satBarChart.data = cd; satBarChart.update(); }
+  else {
+    const canvas = document.getElementById('cBar');
+    satBarChart = new Chart(canvas, {
+      type: 'bar', data: cd,
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: { grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' },
+               ticks: { callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + (v/1000) + 'k', color: '#999EA4' } },
+          y: { grid: { display: false }, ticks: { color: '#EAEBEC', font: { size: 11 } } },
+        },
+        onHover: (evt, els) => {
+          if (els.length) { satShowTT(satData[els[0].index]); moveTT(evt.native); canvas.style.cursor = 'pointer'; }
+          else { hideTT(); canvas.style.cursor = 'default'; }
+        },
+      },
+    });
+    canvas.addEventListener('mouseleave', hideTT);
+  }
+}
+
+// Satellite table
+function renderSatTable() {
+  const tbody = document.querySelector('#tBudget tbody');
+  tbody.innerHTML = '';
+  const gt = satGrandTotal();
+  satData.forEach((cat, ci) => {
+    const cv = satCatTotal(cat);
+    const cr = document.createElement('tr'); cr.className = 'cat';
+    cr.innerHTML = `<td><span class="dot" style="background:${cat.color}"></span>${cat.label}</td><td>${satFmt(cv)}</td><td>${((cv/gt)*100).toFixed(1)}%</td>`;
+    tbody.appendChild(cr);
+    cat.subs.forEach((s, si) => {
+      if (s.val === 0) return;
+      const sr = document.createElement('tr'); sr.className = 'sub';
+      sr.innerHTML = `<td>${s.label}</td><td class="ed" data-sat="1" data-ci="${ci}" data-si="${si}">${satFmt(s.val)}</td><td style="color:var(--sa-text-dim)">${((s.val/gt)*100).toFixed(1)}%</td>`;
+      tbody.appendChild(sr);
+    });
+  });
+  const tr = document.createElement('tr'); tr.className = 'total-row';
+  tr.innerHTML = `<td>TOTAL</td><td>${satFmt(gt)}</td><td>100%</td>`;
+  tbody.appendChild(tr);
+}
+
+function refreshSat() { satUpdateGT(); buildDonut(); buildSatBar(); renderSatTable(); }
+refreshSat();
+
+// Satellite editing (extend existing click handler)
+document.addEventListener('click', e => {
+  const td = e.target.closest('td.ed[data-sat]');
+  if (!td || td.querySelector('input')) return;
+  e.stopPropagation();
+  const raw = td.textContent.replace(/[$,\s]/g, '');
+  const input = document.createElement('input');
+  input.className = 'cell-edit'; input.value = raw;
+  td.textContent = ''; td.appendChild(input);
+  input.focus(); input.select();
+  function commit() {
+    const v = parseFloat(input.value);
+    if (isNaN(v)) { refreshSat(); return; }
+    satData[parseInt(td.dataset.ci)].subs[parseInt(td.dataset.si)].val = v;
+    refreshSat();
+  }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', ev => { if (ev.key === 'Enter') input.blur(); if (ev.key === 'Escape') refreshSat(); });
+}, true);
 </script>
 </body>
 </html>
