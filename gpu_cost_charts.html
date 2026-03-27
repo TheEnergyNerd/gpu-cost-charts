@@ -22,69 +22,29 @@
     --sa-text-faint: #656B72;
     --sa-white: #FFFFFF;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--sa-base);
-    color: var(--sa-text);
-    line-height: 1.6;
-    padding: 2.5rem 1rem;
-    font-size: 16px;
+    background: var(--sa-base); color: var(--sa-text);
+    line-height: 1.6; padding: 2.5rem 1rem; font-size: 16px;
   }
   .container { max-width: 730px; margin: 0 auto; }
-
-  h1 {
-    font-size: clamp(24px, 1.5rem + 1.5vw, 40px);
-    font-weight: 800;
-    color: var(--sa-white);
-    margin-bottom: .3rem;
-    letter-spacing: -0.02em;
-  }
-  .subtitle {
-    color: var(--sa-text-muted);
-    font-size: .9rem;
-    margin-bottom: 2.5rem;
-    font-weight: 400;
-  }
-  h2 {
-    font-size: clamp(18px, 1.1rem + 0.5vw, 24px);
-    font-weight: 800;
-    color: var(--sa-white);
-    margin: 3rem 0 .8rem;
-    letter-spacing: -0.01em;
-  }
-
-  .chart-section {
-    background: var(--sa-surface);
-    border-radius: 10px;
-    padding: 1.2rem 1.5rem;
-    margin-bottom: .6rem;
-  }
+  h1 { font-size: clamp(24px, 1.5rem + 1.5vw, 40px); font-weight: 800; color: var(--sa-white); margin-bottom: .3rem; letter-spacing: -0.02em; }
+  .subtitle { color: var(--sa-text-muted); font-size: .9rem; margin-bottom: 2.5rem; font-weight: 400; }
+  h2 { font-size: clamp(18px, 1.1rem + 0.5vw, 24px); font-weight: 800; color: var(--sa-white); margin: 3rem 0 .8rem; letter-spacing: -0.01em; }
+  .chart-section { background: var(--sa-surface); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: .6rem; }
   .chart-area { height: 340px; }
 
   /* Tooltip */
   #tooltip {
     position: fixed; pointer-events: none; z-index: 100;
-    background: var(--sa-surface);
-    border: 1px solid var(--sa-border);
-    color: var(--sa-text);
-    border-radius: 10px;
-    padding: 14px 18px; font-size: .82rem; line-height: 1.65;
-    box-shadow: 0 12px 40px rgba(0,0,0,.5);
-    max-width: 340px; opacity: 0; transition: opacity .12s;
+    background: var(--sa-surface); border: 1px solid var(--sa-border); color: var(--sa-text);
+    border-radius: 10px; padding: 14px 18px; font-size: .82rem; line-height: 1.65;
+    box-shadow: 0 12px 40px rgba(0,0,0,.5); max-width: 340px; opacity: 0; transition: opacity .12s;
   }
   #tooltip.visible { opacity: 1; }
-  .tt-title {
-    font-weight: 700; font-size: .88rem; margin-bottom: 6px;
-    border-bottom: 1px solid var(--sa-border); padding-bottom: 5px;
-    color: var(--sa-white);
-  }
-  .tt-total {
-    font-weight: 700; font-size: .95rem; margin-top: 6px;
-    border-top: 1px solid var(--sa-border); padding-top: 5px;
-    color: var(--sa-gold);
-  }
+  .tt-title { font-weight: 700; font-size: .88rem; margin-bottom: 6px; border-bottom: 1px solid var(--sa-border); padding-bottom: 5px; color: var(--sa-white); }
+  .tt-total { font-weight: 700; font-size: .95rem; margin-top: 6px; border-top: 1px solid var(--sa-border); padding-top: 5px; color: var(--sa-gold); }
   .tt-row { display: flex; justify-content: space-between; gap: 14px; }
   .tt-row .tt-label { color: var(--sa-text-muted); }
   .tt-row .tt-val { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--sa-text); }
@@ -92,60 +52,36 @@
   .tt-pct { color: var(--sa-text-dim); font-size: .72rem; margin-left: 3px; }
 
   /* Tables */
-  table {
-    width: 100%; border-collapse: collapse;
-    font-size: .82rem; margin-bottom: 2.5rem;
-    background: var(--sa-surface); border-radius: 10px; overflow: hidden;
-  }
-  thead th {
-    background: var(--sa-surface2);
-    color: var(--sa-text-muted);
-    padding: 10px 12px; text-align: left;
-    font-weight: 600; font-size: .72rem;
-    text-transform: uppercase; letter-spacing: .5px;
-    border-bottom: 1px solid var(--sa-border);
-  }
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-bottom: 2.5rem; background: var(--sa-surface); border-radius: 10px; overflow: hidden; }
+  thead th { background: var(--sa-surface2); color: var(--sa-text-muted); padding: 10px 12px; text-align: left; font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--sa-border); }
   thead th:not(:first-child) { text-align: right; }
-  tbody td {
-    padding: 6px 12px;
-    border-bottom: 1px solid var(--sa-border);
-    color: var(--sa-text);
-  }
+  tbody td { padding: 6px 12px; border-bottom: 1px solid var(--sa-border); color: var(--sa-text); }
   tbody td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
   tbody tr:hover { background: var(--sa-surface2); }
   tbody tr.cat td { font-weight: 600; background: rgba(247, 176, 65, 0.06); color: var(--sa-white); }
   tbody tr.sub td:first-child { padding-left: 24px; color: var(--sa-text-muted); }
   tbody tr.total-row { background: var(--sa-gold); }
   tbody tr.total-row td { border: none; color: var(--sa-base); font-weight: 700; }
-
   td.ed { cursor: pointer; position: relative; }
   td.ed:hover { background: rgba(247, 176, 65, 0.1); }
-  td.ed::after {
-    content: '✎'; position: absolute; right: 4px; top: 50%;
-    transform: translateY(-50%); font-size: .58rem;
-    color: var(--sa-text-faint); opacity: 0;
-  }
+  td.ed::after { content: '✎'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: .58rem; color: var(--sa-text-faint); opacity: 0; }
   td.ed:hover::after { opacity: 1; }
-  input.cell-edit {
-    width: 100%; border: 2px solid var(--sa-gold); border-radius: 4px;
-    padding: 3px 8px; font-size: .82rem; text-align: right;
-    outline: none; background: var(--sa-surface2); color: var(--sa-white);
-    font-family: 'Inter', sans-serif;
-  }
-
+  input.cell-edit { width: 100%; border: 2px solid var(--sa-gold); border-radius: 4px; padding: 3px 8px; font-size: .82rem; text-align: right; outline: none; background: var(--sa-surface2); color: var(--sa-white); font-family: 'Inter', sans-serif; }
   .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-  .note { font-size: .76rem; color: var(--sa-text-dim); font-style: italic; margin: .4rem 0; }
 
-  /* Grand total callout */
-  .grand-total {
-    background: var(--sa-surface); border: 1px solid var(--sa-gold);
-    border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0 2rem;
-    display: flex; justify-content: space-between; align-items: baseline;
-  }
+  /* Callouts */
+  .grand-total { background: var(--sa-surface); border: 1px solid var(--sa-gold); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0 2rem; display: flex; justify-content: space-between; align-items: baseline; }
   .gt-label { color: var(--sa-text-muted); font-weight: 600; font-size: .9rem; text-transform: uppercase; letter-spacing: .5px; }
   .gt-value { color: var(--sa-gold); font-weight: 800; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+  .compare-row { display: flex; gap: 1rem; margin: 1.5rem 0; }
+  .compare-card { flex: 1; background: var(--sa-surface); border-radius: 10px; padding: 1rem 1.2rem; border: 1px solid var(--sa-border); }
+  .compare-card.highlight { border-color: var(--sa-gold); }
+  .cc-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--sa-text-muted); font-weight: 600; margin-bottom: 4px; }
+  .cc-val { font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--sa-white); }
+  .cc-val.gold { color: var(--sa-gold); }
+  .cc-sub { font-size: .76rem; color: var(--sa-text-dim); margin-top: 2px; }
 
-  /* Donut layout */
+  /* Donut */
   .donut-wrap { display: flex; align-items: center; gap: 2rem; }
   .donut-area { width: 300px; height: 300px; flex-shrink: 0; }
   .donut-legend { flex: 1; }
@@ -160,6 +96,7 @@
   @media (max-width: 640px) {
     .donut-wrap { flex-direction: column; }
     .donut-area { width: 100%; height: 260px; }
+    .compare-row { flex-direction: column; }
   }
 </style>
 </head>
@@ -174,8 +111,8 @@
 <div class="chart-section"><div class="chart-area"><canvas id="c1"></canvas></div></div>
 <table id="t1"><thead><tr><th>Component</th><th>Terrestrial</th><th>Orbital</th></tr></thead><tbody></tbody></table>
 
-<!-- 2. Datacenter Cost -->
-<h2>2. Datacenter Cost Breakdown — $/hr per GPU</h2>
+<!-- 2. Datacenter + IT Capital -->
+<h2>2. Datacenter & IT Capital Cost — $/hr per GPU</h2>
 <div class="chart-section"><div class="chart-area"><canvas id="c2"></canvas></div></div>
 <table id="t2"><thead><tr><th>Component</th><th>Terrestrial</th><th>Orbital</th></tr></thead><tbody></tbody></table>
 
@@ -190,18 +127,29 @@
 <table id="t4"><thead><tr><th>Metric</th><th>Terrestrial</th><th>Orbital</th></tr></thead><tbody></tbody></table>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- 5. SATELLITE COST BUDGET -->
+<!-- SATELLITE COST BUDGET -->
 <!-- ═══════════════════════════════════════════════ -->
 <div style="border-top: 1px solid var(--sa-border); margin: 3rem 0 1rem;"></div>
 <h1 style="margin-top:2rem;">Orbital Compute Satellite — Cost Budget</h1>
 <p class="subtitle">Single satellite deployment + 5-year operations. Hover for breakdown, click values to edit.</p>
 
-<div id="grandTotal" class="grand-total">
-  <span class="gt-label">Total Satellite Cost</span>
-  <span class="gt-value" id="gtVal"></span>
+<div class="compare-row">
+  <div class="compare-card">
+    <div class="cc-label">Terrestrial 5-Year TCO (8 GPUs)</div>
+    <div class="cc-val" id="terrTCO5"></div>
+    <div class="cc-sub">IT Capital + Datacenter + Operations</div>
+  </div>
+  <div class="compare-card highlight">
+    <div class="cc-label">Orbital Satellite Cost</div>
+    <div class="cc-val gold" id="gtVal"></div>
+    <div class="cc-sub">Full build + launch + 5yr ops</div>
+  </div>
 </div>
 
-<h2>5. Cost Allocation</h2>
+<h2>5. 5-Year Cost Comparison</h2>
+<div class="chart-section"><div class="bar-area"><canvas id="cCompare"></canvas></div></div>
+
+<h2>6. Orbital Cost Allocation</h2>
 <div class="chart-section">
   <div class="donut-wrap">
     <div class="donut-area"><canvas id="cDonut"></canvas></div>
@@ -209,7 +157,7 @@
   </div>
 </div>
 
-<h2>6. Cost by Category</h2>
+<h2>7. Orbital Cost by Category</h2>
 <div class="chart-section"><div class="bar-area"><canvas id="cBar"></canvas></div></div>
 
 <table id="tBudget">
@@ -218,111 +166,170 @@
 </table>
 
 </div>
-
 <div id="tooltip"></div>
 
 <script>
-// SemiAnalysis-inspired palette
 const C = {
-  gold:   '#F7B041',  // primary accent
-  blue:   '#0B86D1',  // secondary
-  teal:   '#2EC4B6',
-  coral:  '#E8654A',
-  green:  '#4ADE80',
-  purple: '#A78BFA',
-  pink:   '#F472B6',
-  grey:   '#999EA4',
+  gold: '#F7B041', blue: '#0B86D1', teal: '#2EC4B6',
+  coral: '#E8654A', green: '#4ADE80', purple: '#A78BFA',
+  pink: '#F472B6', grey: '#999EA4',
 };
-
-// Chart.js global defaults for dark theme
 Chart.defaults.color = '#999EA4';
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.font.size = 12;
 
 // ═══════════════════════════════════════════════
-// 1. TCO OVERVIEW
+// SEGMENT + TOTAL LABEL PLUGIN
+// ═══════════════════════════════════════════════
+const labelPlugin = {
+  id: 'barLabels',
+  afterDraw(chart) {
+    if (chart.config.options.plugins?.barLabels?.enabled === false) return;
+    const { ctx, data, chartArea } = chart;
+    const isHoriz = chart.config.options.indexAxis === 'y';
+    const fmtFn = chart.config.options.plugins?.barLabels?.format || (v => '$' + v.toFixed(2));
+
+    // Segment labels inside bars
+    data.datasets.forEach((ds, di) => {
+      const meta = chart.getDatasetMeta(di);
+      meta.data.forEach((bar, i) => {
+        const val = ds.data[i];
+        if (!val || val === 0) return;
+        const size = isHoriz ? Math.abs(bar.x - bar.base) : Math.abs(bar.base - bar.y);
+        if (size < 24) return;
+        ctx.save();
+        ctx.font = '600 10px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (isHoriz) {
+          ctx.fillText(fmtFn(val), (bar.x + bar.base) / 2, bar.y);
+        } else {
+          ctx.fillText(fmtFn(val), bar.x, (bar.y + bar.base) / 2);
+        }
+        ctx.restore();
+      });
+    });
+
+    // Total labels
+    const lastDs = data.datasets.length - 1;
+    const lastMeta = chart.getDatasetMeta(lastDs);
+    lastMeta.data.forEach((bar, i) => {
+      const total = data.datasets.reduce((s, ds) => s + (ds.data[i] || 0), 0);
+      if (total === 0) return;
+      ctx.save();
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillStyle = '#EAEBEC';
+      if (isHoriz) {
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        // find the rightmost edge across all datasets for this bar
+        let maxX = 0;
+        data.datasets.forEach((ds, di) => {
+          const m = chart.getDatasetMeta(di);
+          if (m.data[i]) maxX = Math.max(maxX, m.data[i].x);
+        });
+        ctx.fillText(fmtFn(total), maxX + 8, bar.y);
+      } else {
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        // find the topmost edge
+        let minY = chartArea.bottom;
+        data.datasets.forEach((ds, di) => {
+          const m = chart.getDatasetMeta(di);
+          if (m.data[i]) minY = Math.min(minY, m.data[i].y);
+        });
+        ctx.fillText(fmtFn(total), bar.x, minY - 6);
+      }
+      ctx.restore();
+    });
+  }
+};
+Chart.register(labelPlugin);
+
+// ═══════════════════════════════════════════════
+// DATA
 // ═══════════════════════════════════════════════
 const d1 = [
   { label: 'IT Capital', color: C.blue, terr: 1.51, orb: 1.57, subs: [
-    { label: 'Server hardware',        terr: 1.24, orb: 1.11 },
-    { label: 'Networking',             terr: 0.14, orb: 0.23 },
-    { label: 'Storage',                terr: 0.02, orb: 0.06 },
-    { label: 'Software & licenses',    terr: 0.03, orb: 0.05 },
+    { label: 'Server hardware', terr: 1.24, orb: 1.11 },
+    { label: 'Networking', terr: 0.14, orb: 0.23 },
+    { label: 'Storage', terr: 0.02, orb: 0.06 },
+    { label: 'Software & licenses', terr: 0.03, orb: 0.05 },
     { label: 'Service & installation', terr: 0.08, orb: 0.12 },
   ]},
   { label: 'Datacenter', color: C.gold, terr: 0.21, orb: 6.28, subs: [
     { label: 'Levelized DC capital', terr: 0.14, orb: 6.12 },
-    { label: 'Direct operations',    terr: 0.04, orb: 0.04 },
-    { label: 'G&A',                  terr: 0.03, orb: 0.12 },
+    { label: 'Direct operations', terr: 0.04, orb: 0.04 },
+    { label: 'G&A', terr: 0.03, orb: 0.12 },
   ]},
   { label: 'Operating Cost', color: C.teal, terr: 0.20, orb: 0.03, subs: [
-    { label: 'Electricity',             terr: 0.13, orb: 0.00 },
-    { label: 'Remote hands & support',  terr: 0.04, orb: 0.01 },
-    { label: 'Internet / backhaul',     terr: 0.03, orb: 0.02 },
+    { label: 'Electricity', terr: 0.13, orb: 0.00 },
+    { label: 'Remote hands & support', terr: 0.04, orb: 0.01 },
+    { label: 'Internet / backhaul', terr: 0.03, orb: 0.02 },
   ]},
 ];
 
-// ═══════════════════════════════════════════════
-// 2. DATACENTER COST BREAKDOWN
-// ═══════════════════════════════════════════════
 const d2 = [
-  { label: 'DC Capital (levelized)', color: C.blue, terr: 0.14, orb: 6.12, subs: [
+  { label: 'IT Hardware', color: C.coral, terr: 1.24, orb: 1.11, subs: [
+    { label: 'Server / GPU hardware', terr: 1.24, orb: 1.11 },
+  ]},
+  { label: 'IT Networking & Storage', color: C.purple, terr: 0.19, orb: 0.34, subs: [
+    { label: 'Networking (NVLink, fabric)', terr: 0.14, orb: 0.23 },
+    { label: 'Storage', terr: 0.02, orb: 0.06 },
+    { label: 'Software & licenses', terr: 0.03, orb: 0.05 },
+  ]},
+  { label: 'IT Service & Install', color: C.pink, terr: 0.08, orb: 0.12, subs: [
+    { label: 'Service, installation', terr: 0.08, orb: 0.12 },
+  ]},
+  { label: 'DC Capital (levelized)', color: C.blue, terr: 0.093, orb: 6.12, subs: [
     { label: 'Power & distribution ($5.6M/MW, 15yr)', terr: 0.043, orb: 0.00 },
-    { label: 'Cooling / HVAC ($3.3M/MW, 12yr)',       terr: 0.032, orb: 0.00 },
-    { label: 'Core & shell ($1.7M/MW, 25yr)',          terr: 0.008, orb: 0.00 },
-    { label: 'Pod & fit-out ($0.7M/MW, 10yr)',         terr: 0.008, orb: 0.00 },
-    { label: 'Land ($1.3M/MW, 99yr)',                  terr: 0.002, orb: 0.00 },
-    { label: 'Launch & orbital infrastructure',        terr: 0.00,  orb: 4.10 },
-    { label: 'Thermal rejection (radiators)',          terr: 0.00,  orb: 1.20 },
-    { label: 'Solar power system',                     terr: 0.00,  orb: 0.82 },
+    { label: 'Cooling / HVAC ($3.3M/MW, 12yr)', terr: 0.032, orb: 0.00 },
+    { label: 'Core & shell ($1.7M/MW, 25yr)', terr: 0.008, orb: 0.00 },
+    { label: 'Pod & fit-out ($0.7M/MW, 10yr)', terr: 0.008, orb: 0.00 },
+    { label: 'Land ($1.3M/MW, 99yr)', terr: 0.002, orb: 0.00 },
+    { label: 'Launch & orbital infrastructure', terr: 0.00, orb: 4.10 },
+    { label: 'Thermal rejection (radiators)', terr: 0.00, orb: 1.20 },
+    { label: 'Solar power system', terr: 0.00, orb: 0.82 },
   ]},
-  { label: 'Direct Operations', color: C.gold, terr: 0.04, orb: 0.04, subs: [
-    { label: 'Facility operations & maintenance', terr: 0.04, orb: 0.04 },
-  ]},
-  { label: 'G&A Overhead', color: C.teal, terr: 0.03, orb: 0.12, subs: [
-    { label: 'General & administrative', terr: 0.03, orb: 0.12 },
+  { label: 'DC Operations & G&A', color: C.gold, terr: 0.07, orb: 0.16, subs: [
+    { label: 'Direct operations', terr: 0.04, orb: 0.04 },
+    { label: 'G&A overhead', terr: 0.03, orb: 0.12 },
   ]},
 ];
 
-// ═══════════════════════════════════════════════
-// 3. CLUSTER OPERATING COST
-// ═══════════════════════════════════════════════
 const d3 = [
   { label: 'Electricity', color: C.blue, terr: 0.13, orb: 0.00, subs: [
-    { label: 'Grid power ($0.087/kWh, PUE 1.35)',  terr: 0.13, orb: 0.00 },
-    { label: 'Solar (included in DC capex)',        terr: 0.00, orb: 0.00 },
+    { label: 'Grid power ($0.087/kWh, PUE 1.35)', terr: 0.13, orb: 0.00 },
+    { label: 'Solar (included in DC capex)', terr: 0.00, orb: 0.00 },
   ]},
   { label: 'Remote Hands & Support', color: C.gold, terr: 0.04, orb: 0.01, subs: [
     { label: 'On-site support engineer', terr: 0.02, orb: 0.005 },
-    { label: 'Remote hands service',     terr: 0.02, orb: 0.005 },
+    { label: 'Remote hands service', terr: 0.02, orb: 0.005 },
   ]},
   { label: 'Internet / Backhaul', color: C.teal, terr: 0.03, orb: 0.02, subs: [
-    { label: 'Terrestrial internet',              terr: 0.03, orb: 0.00 },
+    { label: 'Terrestrial internet', terr: 0.03, orb: 0.00 },
     { label: 'Optical downlink / ground station', terr: 0.00, orb: 0.02 },
   ]},
 ];
 
-// ═══════════════════════════════════════════════
-// 4. COST EFFICIENCY METRICS
-// ═══════════════════════════════════════════════
 const d4 = [
-  { label: '$/hr per PFLOP',           color: C.blue,  terr: 0.43, orb: 1.75, subs: [
+  { label: '$/hr per PFLOP', color: C.blue, terr: 0.43, orb: 1.75, subs: [
     { label: 'Marketed: 36 PFLOPS FP8 per server', terr: 0.43, orb: 1.75 },
-    { label: 'Effective training: 18 PFLOPS',       terr: 0.85, orb: 3.50 },
+    { label: 'Effective training: 18 PFLOPS', terr: 0.85, orb: 3.50 },
   ]},
-  { label: '$/M tokens (inference)',    color: C.gold,  terr: 0.53, orb: 2.16, subs: [
+  { label: '$/M tokens (inference)', color: C.gold, terr: 0.53, orb: 2.16, subs: [
     { label: 'Throughput: 1,013 tok/s/GPU', terr: 0.53, orb: 2.16 },
   ]},
-  { label: '$/hr per TB/s bandwidth',  color: C.teal,  terr: 0.24, orb: 0.98, subs: [
+  { label: '$/hr per TB/s bandwidth', color: C.teal, terr: 0.24, orb: 0.98, subs: [
     { label: 'Memory BW: 8 TB/s per GPU', terr: 0.24, orb: 0.98 },
   ]},
 ];
 
 // ═══════════════════════════════════════════════
-// TOOLTIP ENGINE
+// TOOLTIP
 // ═══════════════════════════════════════════════
 const ttEl = document.getElementById('tooltip');
-
 function showTT(el, cat, fmtFn) {
   const col = el.dataIndex === 0 ? 'terr' : 'orb';
   const colName = el.dataIndex === 0 ? 'Terrestrial' : 'Orbital';
@@ -337,7 +344,6 @@ function showTT(el, cat, fmtFn) {
   ttEl.innerHTML = html;
   ttEl.classList.add('visible');
 }
-
 function moveTT(evt) {
   const x = evt.clientX, y = evt.clientY;
   const tw = ttEl.offsetWidth, th = ttEl.offsetHeight;
@@ -362,47 +368,30 @@ function buildChart(id, data, yLabel, fmtTick, fmtFn) {
     data: {
       labels: ['B300 Terrestrial', 'B300 Orbital'],
       datasets: data.map(cat => ({
-        label: cat.label,
-        data: [cat.terr, cat.orb],
-        backgroundColor: cat.color,
-        hoverBackgroundColor: cat.color,
-        borderRadius: 3,
-        barThickness: 60,
+        label: cat.label, data: [cat.terr, cat.orb],
+        backgroundColor: cat.color, hoverBackgroundColor: cat.color,
+        borderRadius: 3, barThickness: 60,
       }))
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true, pointStyle: 'circle', padding: 18,
-            color: '#999EA4',
-            font: { size: 11.5, family: "'Inter', sans-serif" },
-          },
-        },
+        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 18, color: '#999EA4', font: { size: 11.5 } } },
         tooltip: { enabled: false },
+        barLabels: { format: fmtFn },
       },
       scales: {
-        x: {
-          stacked: true,
-          grid: { display: false },
-          ticks: { color: '#999EA4', font: { family: "'Inter', sans-serif" } },
-        },
+        x: { stacked: true, grid: { display: false }, ticks: { color: '#999EA4' } },
         y: {
           stacked: true,
-          grid: { color: '#35383C', lineWidth: 0.5 },
-          border: { color: '#35383C' },
-          title: { display: true, text: yLabel, color: '#7E848C', font: { family: "'Inter', sans-serif", weight: 500 } },
-          ticks: { callback: fmtTick, color: '#999EA4', font: { family: "'Inter', sans-serif" } },
+          grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' },
+          title: { display: true, text: yLabel, color: '#7E848C', font: { weight: 500 } },
+          ticks: { callback: fmtTick, color: '#999EA4' },
         },
       },
       onHover: (evt, elements) => {
-        if (elements.length) {
-          showTT(elements[0], data[elements[0].datasetIndex], fmtFn);
-          moveTT(evt.native);
-          canvas.style.cursor = 'pointer';
-        } else { hideTT(); canvas.style.cursor = 'default'; }
+        if (elements.length) { showTT(elements[0], data[elements[0].datasetIndex], fmtFn); moveTT(evt.native); canvas.style.cursor = 'pointer'; }
+        else { hideTT(); canvas.style.cursor = 'default'; }
       },
     },
   });
@@ -416,12 +405,12 @@ const tickDollar = v => '$' + v.toFixed(1);
 const tickDollar2 = v => '$' + v.toFixed(2);
 
 buildChart('c1', d1, '$/hr/GPU', tickDollar, fmtDollar2);
-buildChart('c2', d2, '$/hr/GPU', tickDollar2, fmtDollar3);
+buildChart('c2', d2, '$/hr/GPU', tickDollar, fmtDollar2);
 buildChart('c3', d3, '$/hr/GPU', tickDollar2, fmtDollar3);
 buildChart('c4', d4, '$/hr', tickDollar2, fmtDollar2);
 
 // ═══════════════════════════════════════════════
-// TABLE RENDERER
+// TABLE RENDERER + EDITING
 // ═══════════════════════════════════════════════
 function renderTable(tid, data, fmtFn) {
   const tbody = document.querySelector(`#${tid} tbody`);
@@ -450,7 +439,7 @@ function renderTable(tid, data, fmtFn) {
 
 const tableMap = {
   t1: { data: d1, fmt: fmtDollar2, chart: 'c1' },
-  t2: { data: d2, fmt: fmtDollar3, chart: 'c2' },
+  t2: { data: d2, fmt: fmtDollar2, chart: 'c2' },
   t3: { data: d3, fmt: fmtDollar3, chart: 'c3' },
   t4: { data: d4, fmt: fmtDollar2, chart: 'c4' },
 };
@@ -469,85 +458,70 @@ function refreshTable(tid) {
 
 Object.keys(tableMap).forEach(tid => renderTable(tid, tableMap[tid].data, tableMap[tid].fmt));
 
-// ═══════════════════════════════════════════════
-// INLINE EDITING
-// ═══════════════════════════════════════════════
 document.addEventListener('click', e => {
   const td = e.target.closest('td.ed');
-  if (!td || td.querySelector('input')) return;
+  if (!td || td.querySelector('input') || td.dataset.sat) return;
   const raw = td.textContent.replace(/[$,\s]/g, '');
   const input = document.createElement('input');
   input.className = 'cell-edit'; input.value = raw;
   td.textContent = ''; td.appendChild(input);
   input.focus(); input.select();
-
   function commit() {
     const v = parseFloat(input.value);
     const tid = td.dataset.tid;
     const m = tableMap[tid];
     if (isNaN(v)) { refreshTable(tid); return; }
     const ci = parseInt(td.dataset.ci), col = td.dataset.col;
-    if (td.dataset.si !== undefined) {
-      m.data[ci].subs[parseInt(td.dataset.si)][col] = v;
-    } else {
-      const old = m.data[ci][col];
-      const ratio = old > 0 ? v / old : 1;
-      m.data[ci].subs.forEach(s => { s[col] = +(s[col] * ratio).toFixed(6); });
-    }
+    if (td.dataset.si !== undefined) { m.data[ci].subs[parseInt(td.dataset.si)][col] = v; }
+    else { const old = m.data[ci][col]; const ratio = old > 0 ? v / old : 1; m.data[ci].subs.forEach(s => { s[col] = +(s[col] * ratio).toFixed(6); }); }
     refreshTable(tid);
   }
   input.addEventListener('blur', commit);
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') input.blur();
-    if (e.key === 'Escape') refreshTable(td.dataset.tid);
-  });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') refreshTable(td.dataset.tid); });
 });
 
 // ═══════════════════════════════════════════════
-// 5. SATELLITE COST BUDGET
+// SATELLITE COST BUDGET
 // ═══════════════════════════════════════════════
-const satPalette = [
-  '#0B86D1', '#F7B041', '#2EC4B6', '#A78BFA', '#F472B6',
-  '#4ADE80', '#E8654A', '#38BDF8', '#FBBF24',
-];
+const satPalette = ['#0B86D1','#F7B041','#2EC4B6','#A78BFA','#F472B6','#4ADE80','#E8654A','#38BDF8','#FBBF24'];
 
 const satData = [
   { label: 'Compute Hardware', color: satPalette[0], subs: [
-    { label: 'GPU Hardware (8×)',      val: 720000 },
-    { label: 'Carrier Cards',         val: 32000 },
+    { label: 'GPU Hardware (8x)', val: 720000 },
+    { label: 'Carrier Cards', val: 32000 },
     { label: 'Server Infrastructure', val: 16000 },
-    { label: 'Network Hardware',      val: 6000 },
+    { label: 'Network Hardware', val: 6000 },
   ]},
   { label: 'Power & Thermal', color: satPalette[1], subs: [
-    { label: 'Solar Array',       val: 33830.66 },
+    { label: 'Solar Array', val: 33830.66 },
     { label: 'Radiator Hardware', val: 48000 },
-    { label: 'Cold Plates',      val: 8000 },
+    { label: 'Cold Plates', val: 8000 },
   ]},
   { label: 'Comms & Ground', color: satPalette[2], subs: [
     { label: 'Comms Hardware (laser)', val: 950000 },
-    { label: 'Ground Segment',        val: 45000 },
+    { label: 'Ground Segment', val: 45000 },
   ]},
   { label: 'Bus & Propulsion', color: satPalette[3], subs: [
     { label: 'Bus Hardware (ADCS+OBC+harness)', val: 870000 },
     { label: 'Thruster Hardware', val: 150000 },
-    { label: 'Feed System',      val: 30000 },
-    { label: 'Propellant',       val: 45.97 },
-    { label: 'Tank',             val: 275.80 },
-    { label: 'Shielding (Al)',   val: 1600 },
+    { label: 'Feed System', val: 30000 },
+    { label: 'Propellant', val: 45.97 },
+    { label: 'Tank', val: 275.80 },
+    { label: 'Shielding (Al)', val: 1600 },
     { label: 'Structure & Integration', val: 33125.14 },
   ]},
   { label: 'Radiation Testing', color: satPalette[4], subs: [
     { label: 'Characterization Campaign (NRE)', val: 150000 },
-    { label: 'UC Davis CNL Beam Time',          val: 90480 },
+    { label: 'UC Davis CNL Beam Time', val: 90480 },
   ]},
   { label: 'Assembly, Integration & Test', color: satPalette[5], subs: [
     { label: 'AIT (10% of HW)', val: 286543.07 },
   ]},
   { label: 'Flight Software (NRE)', color: satPalette[6], subs: [
-    { label: '200k SLOC × 60% new × $15/SLOC', val: 1200000 },
+    { label: '200k SLOC x 60% new x $15/SLOC', val: 1200000 },
   ]},
   { label: 'Operations (5 yr)', color: satPalette[7], subs: [
-    { label: 'AI-first ops ($200k/yr)',      val: 1000000 },
+    { label: 'AI-first ops ($200k/yr)', val: 1000000 },
     { label: 'Ground station ops ($50k/yr)', val: 250000 },
   ]},
   { label: 'Launch (Falcon 9)', color: satPalette[8], subs: [
@@ -555,14 +529,24 @@ const satData = [
   ]},
 ];
 
+// Terrestrial 5yr for 8 GPUs
+const terrCompare = [
+  { label: 'IT Capital', color: C.blue, val: 482619 },
+  { label: 'Datacenter', color: C.gold, val: 73584 },
+  { label: 'Operations', color: C.teal, val: 70080 },
+];
+
 function satCatTotal(cat) { return cat.subs.reduce((s, x) => s + x.val, 0); }
 function satGrandTotal() { return satData.reduce((s, c) => s + satCatTotal(c), 0); }
+function terrCompareTotal() { return terrCompare.reduce((s, c) => s + c.val, 0); }
 function satFmt(v) { return '$' + Math.round(v).toLocaleString(); }
-function satFmtK(v) { return v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + Math.round(v/1000) + 'k'; }
+function satFmtK(v) { return v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + Math.round(v/1000).toLocaleString() + 'k'; }
 
-function satUpdateGT() { document.getElementById('gtVal').textContent = satFmt(satGrandTotal()); }
+function updateCallouts() {
+  document.getElementById('gtVal').textContent = satFmt(satGrandTotal());
+  document.getElementById('terrTCO5').textContent = satFmt(terrCompareTotal());
+}
 
-// Satellite tooltip (reuses ttEl)
 function satShowTT(cat) {
   const total = satCatTotal(cat);
   const gt = satGrandTotal();
@@ -576,32 +560,73 @@ function satShowTT(cat) {
   ttEl.classList.add('visible');
 }
 
+function terrShowTT(cat) {
+  const gt = terrCompareTotal();
+  let html = `<div class="tt-title"><span class="tt-dot" style="background:${cat.color}"></span>${cat.label} — Terrestrial</div>`;
+  html += `<div class="tt-row"><span class="tt-label">5yr cost (8 GPUs)</span><span class="tt-val">${satFmt(cat.val)}</span></div>`;
+  html += `<div class="tt-row"><span class="tt-label">% of total</span><span class="tt-val">${((cat.val/gt)*100).toFixed(1)}%</span></div>`;
+  ttEl.innerHTML = html;
+  ttEl.classList.add('visible');
+}
+
+// Comparison chart
+let compareChart;
+function buildCompare() {
+  const orbCats = satData.map(c => ({ label: c.label, color: c.color, val: satCatTotal(c) }));
+  const datasets = [];
+  terrCompare.forEach(c => { datasets.push({ label: c.label + ' (Terr)', data: [c.val, 0], backgroundColor: c.color, borderRadius: 3, barThickness: 40 }); });
+  orbCats.forEach(c => { datasets.push({ label: c.label, data: [0, c.val], backgroundColor: c.color, borderRadius: 3, barThickness: 40 }); });
+  const cd = { labels: ['Terrestrial 5yr', 'Orbital Satellite'], datasets };
+  const fmtBig = v => v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + Math.round(v/1000) + 'k';
+
+  if (compareChart) { compareChart.data = cd; compareChart.update(); return; }
+  const canvas = document.getElementById('cCompare');
+  compareChart = new Chart(canvas, {
+    type: 'bar', data: cd,
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+        barLabels: { format: fmtBig },
+      },
+      scales: {
+        x: { stacked: true, grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' }, ticks: { callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(0) + 'M' : '$' + (v/1000) + 'k', color: '#999EA4' } },
+        y: { stacked: true, grid: { display: false }, ticks: { color: '#EAEBEC', font: { size: 12, weight: 600 } } },
+      },
+      onHover: (evt, els) => {
+        if (els.length) {
+          const di = els[0].datasetIndex, bi = els[0].dataIndex;
+          if (bi === 0 && di < terrCompare.length) terrShowTT(terrCompare[di]);
+          else if (bi === 1 && di >= terrCompare.length) satShowTT(satData[di - terrCompare.length]);
+          moveTT(evt.native); canvas.style.cursor = 'pointer';
+        } else { hideTT(); canvas.style.cursor = 'default'; }
+      },
+    },
+  });
+  canvas.addEventListener('mouseleave', hideTT);
+}
+
 // Donut
 let donutChart;
 function buildDonut() {
   const vals = satData.map(satCatTotal);
-  const gt = satGrandTotal();
-  const cd = {
-    labels: satData.map(c => c.label),
-    datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderColor: '#131416', borderWidth: 2 }]
-  };
+  const cd = { labels: satData.map(c => c.label), datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderColor: '#131416', borderWidth: 2 }] };
   if (donutChart) { donutChart.data = cd; donutChart.update(); }
   else {
     donutChart = new Chart(document.getElementById('cDonut'), {
       type: 'doughnut', data: cd,
       options: {
         responsive: true, maintainAspectRatio: false, cutout: '62%',
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        onHover: (evt, els) => {
-          if (els.length) { satShowTT(satData[els[0].index]); moveTT(evt.native); } else hideTT();
-        },
+        plugins: { legend: { display: false }, tooltip: { enabled: false }, barLabels: { enabled: false } },
+        onHover: (evt, els) => { if (els.length) { satShowTT(satData[els[0].index]); moveTT(evt.native); } else hideTT(); },
       },
     });
     document.getElementById('cDonut').addEventListener('mouseleave', hideTT);
   }
-  // Legend
   const leg = document.getElementById('donutLegend');
   leg.innerHTML = '';
+  const gt = satGrandTotal();
   satData.forEach(c => {
     const v = satCatTotal(c);
     const el = document.createElement('div'); el.className = 'legend-item';
@@ -616,10 +641,7 @@ function buildDonut() {
 let satBarChart;
 function buildSatBar() {
   const vals = satData.map(satCatTotal);
-  const cd = {
-    labels: satData.map(c => c.label),
-    datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderRadius: 4, barThickness: 26 }]
-  };
+  const cd = { labels: satData.map(c => c.label), datasets: [{ data: vals, backgroundColor: satData.map(c => c.color), borderRadius: 4, barThickness: 26 }] };
   if (satBarChart) { satBarChart.data = cd; satBarChart.update(); }
   else {
     const canvas = document.getElementById('cBar');
@@ -627,10 +649,9 @@ function buildSatBar() {
       type: 'bar', data: cd,
       options: {
         indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        plugins: { legend: { display: false }, tooltip: { enabled: false }, barLabels: { enabled: false } },
         scales: {
-          x: { grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' },
-               ticks: { callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + (v/1000) + 'k', color: '#999EA4' } },
+          x: { grid: { color: '#35383C', lineWidth: 0.5 }, border: { color: '#35383C' }, ticks: { callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(1) + 'M' : '$' + (v/1000) + 'k', color: '#999EA4' } },
           y: { grid: { display: false }, ticks: { color: '#EAEBEC', font: { size: 11 } } },
         },
         onHover: (evt, els) => {
@@ -665,10 +686,9 @@ function renderSatTable() {
   tbody.appendChild(tr);
 }
 
-function refreshSat() { satUpdateGT(); buildDonut(); buildSatBar(); renderSatTable(); }
+function refreshSat() { updateCallouts(); buildCompare(); buildDonut(); buildSatBar(); renderSatTable(); }
 refreshSat();
 
-// Satellite editing (extend existing click handler)
 document.addEventListener('click', e => {
   const td = e.target.closest('td.ed[data-sat]');
   if (!td || td.querySelector('input')) return;
